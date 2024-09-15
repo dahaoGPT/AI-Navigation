@@ -131,7 +131,7 @@ export default function AINavigation() {
         </li>
         {categories.map(category => (
           <li key={category.id}>
-            <Collapsible
+            <Collapsible 
               open={openCategories.includes(category.id)}
               onOpenChange={() => toggleCategory(category.id)}
             >
