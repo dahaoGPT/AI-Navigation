@@ -12,9 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-
 import { Input } from "@/components/ui/input"
-
 import {
   Collapsible,
   CollapsibleContent,
@@ -69,23 +67,20 @@ const aiWebsites = [
 ]
 
 export default function AINavigation() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredWebsites, setFilteredWebsites] = useState(aiWebsites)
   const [openCategories, setOpenCategories] = useState<string[]>([])
 
   useEffect(() => {
     const filtered = aiWebsites.filter(site => {
-      const matchesCategory = !selectedCategory || 
-        (selectedSubcategory ? site.category === selectedSubcategory : 
-          categories.find(cat => cat.id === selectedCategory)?.subcategories.some(sub => sub.id === site.category))
+      const matchesCategory = selectedCategory === 'all' || site.category === selectedCategory
       const matchesSearch = site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             site.description.toLowerCase().includes(searchQuery.toLowerCase())
       return matchesCategory && matchesSearch
     })
     setFilteredWebsites(filtered)
-  }, [selectedCategory, selectedSubcategory, searchQuery])
+  }, [selectedCategory, searchQuery])
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
@@ -96,27 +91,11 @@ export default function AINavigation() {
   }
 
   const toggleCategory = (categoryId: string) => {
-    setOpenCategories(prev => 
-      prev.includes(categoryId) 
-        ? prev.filter(id => id !== categoryId)  // 如果已经展开则关闭
-        : [...prev, categoryId]                 // 否则展开
-    );
-  };
-  
-  
-
-  const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(categoryId);
-    setSelectedSubcategory(null);
-  
-    // 始终展开该类别（添加或移除 openCategories 的 id）
-    toggleCategory(categoryId);
-  };
-  
-
-  const handleSubcategoryClick = (categoryId: string, subcategoryId: string) => {
-    setSelectedCategory(categoryId)
-    setSelectedSubcategory(subcategoryId)
+    setOpenCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    )
   }
 
   const renderNavigation = () => (
@@ -124,11 +103,8 @@ export default function AINavigation() {
       <ul className="space-y-2">
         <li>
           <Button
-            onClick={() => {
-              setSelectedCategory(null)
-              setSelectedSubcategory(null)
-            }}
-            variant={!selectedCategory ? 'default' : 'ghost'}
+            onClick={() => setSelectedCategory('all')}
+            variant={selectedCategory === 'all' ? 'default' : 'ghost'}
             className="w-full justify-start"
           >
             所有类别
@@ -136,14 +112,13 @@ export default function AINavigation() {
         </li>
         {categories.map(category => (
           <li key={category.id}>
-            <Collapsible 
+            <Collapsible
               open={openCategories.includes(category.id)}
               onOpenChange={() => toggleCategory(category.id)}
             >
               <CollapsibleTrigger asChild>
                 <Button
-                  onClick={() => handleCategoryClick(category.id)}
-                  variant={selectedCategory === category.id && !selectedSubcategory ? 'default' : 'ghost'}
+                  variant="ghost"
                   className="w-full justify-between"
                 >
                   {category.name}
@@ -155,8 +130,8 @@ export default function AINavigation() {
                   {category.subcategories.map(subcat => (
                     <li key={subcat.id}>
                       <Button
-                        onClick={() => handleSubcategoryClick(category.id, subcat.id)}
-                        variant={selectedSubcategory === subcat.id ? 'default' : 'ghost'}
+                        onClick={() => setSelectedCategory(subcat.id)}
+                        variant={selectedCategory === subcat.id ? 'default' : 'ghost'}
                         className="w-full justify-start text-sm"
                       >
                         {subcat.name}
@@ -174,12 +149,9 @@ export default function AINavigation() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="relative bg-cover bg-center h-64 flex items-center justify-center" style={{backgroundImage: "url('/placeholder.svg?height=1080&width=1920')"}}>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">AI导航站</h1>
-          <p className="text-xl md:text-2xl text-white">发现和探索最新的AI工具和网站</p>
-        </div>
+      <header className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 text-center">
+        <h1 className="text-3xl font-bold">AI导航站</h1>
+        <p className="mt-2">发现和探索最新的AI工具和网站</p>
       </header>
 
       <div className="flex flex-1">
@@ -187,25 +159,25 @@ export default function AINavigation() {
           {renderNavigation()}
         </aside>
 
-  <Sheet>
-  <SheetTrigger asChild>
-    {/* 在PC（md及以上）隐藏这个按钮 */}
-    <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
-      <Menu className="h-4 w-4" />
-      <span className="sr-only">打开菜单</span>
-    </Button>
-  </SheetTrigger>
-  <SheetContent side="left" >
-    <SheetHeader>
-      <SheetTitle>类别</SheetTitle>
-      <SheetDescription>选择一个AI网站类别</SheetDescription>
-    </SheetHeader>
-    <div className="mt-4">
-      {renderNavigation()}
-    </div>
-  </SheetContent>
-</Sheet>
-
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
+              <Menu className="h-4 w-4" />
+              <span className="sr-only">打开菜单</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <SheetHeader>
+              <SheetTitle>类别</SheetTitle>
+              <SheetDescription>
+                选择一个AI网站类别
+              </SheetDescription>
+            </SheetHeader>
+            <div className="mt-4">
+              {renderNavigation()}
+            </div>
+          </SheetContent>
+        </Sheet>
 
         <main className="flex-1 p-4">
           <div className="mb-4 relative">
@@ -230,20 +202,20 @@ export default function AINavigation() {
             )}
           </div>
           {filteredWebsites.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredWebsites.map(site => (
                 <a
                   key={site.id}
                   href={site.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block p-4 bg-white rounded-lg shadow hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                  className="block p-4 bg-white rounded shadow hover:shadow-md transition-shadow"
                 >
                   <h2 className="text-xl font-semibold mb-2 flex items-center justify-between">
                     {site.name}
                     <ExternalLink className="h-4 w-4 text-gray-400" />
                   </h2>
-                  <p className="text-sm text-gray-600 mb-2">
+                  <p className="text-gray-600 mb-2">
                     {categories.find(cat => cat.subcategories.some(sub => sub.id === site.category))?.subcategories.find(sub => sub.id === site.category)?.name}
                   </p>
                   <p className="text-sm text-gray-500">{site.description}</p>
