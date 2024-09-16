@@ -12,7 +12,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+
 import { Input } from "@/components/ui/input"
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -94,20 +96,23 @@ export default function AINavigation() {
   }
 
   const toggleCategory = (categoryId: string) => {
-    setOpenCategories(prev =>
-      prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    )
-  }
+    setOpenCategories(prev => 
+      prev.includes(categoryId) 
+        ? prev.filter(id => id !== categoryId)  // 如果已经展开则关闭
+        : [...prev, categoryId]                 // 否则展开
+    );
+  };
+  
+  
 
   const handleCategoryClick = (categoryId: string) => {
-    setSelectedCategory(categoryId)
-    setSelectedSubcategory(null)
-    if (!openCategories.includes(categoryId)) {
-      toggleCategory(categoryId)
-    }
-  }
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory(null);
+  
+    // 始终展开该类别（添加或移除 openCategories 的 id）
+    toggleCategory(categoryId);
+  };
+  
 
   const handleSubcategoryClick = (categoryId: string, subcategoryId: string) => {
     setSelectedCategory(categoryId)
@@ -182,25 +187,25 @@ export default function AINavigation() {
           {renderNavigation()}
         </aside>
 
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
-              <Menu className="h-4 w-4" />
-              <span className="sr-only">打开菜单</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left">
-            <SheetHeader>
-              <SheetTitle>类别</SheetTitle>
-              <SheetDescription>
-                选择一个AI网站类别
-              </SheetDescription>
-            </SheetHeader>
-            <div className="mt-4">
-              {renderNavigation()}
-            </div>
-          </SheetContent>
-        </Sheet>
+  <Sheet>
+  <SheetTrigger asChild>
+    {/* 在PC（md及以上）隐藏这个按钮 */}
+    <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
+      <Menu className="h-4 w-4" />
+      <span className="sr-only">打开菜单</span>
+    </Button>
+  </SheetTrigger>
+  <SheetContent side="left" >
+    <SheetHeader>
+      <SheetTitle>类别</SheetTitle>
+      <SheetDescription>选择一个AI网站类别</SheetDescription>
+    </SheetHeader>
+    <div className="mt-4">
+      {renderNavigation()}
+    </div>
+  </SheetContent>
+</Sheet>
+
 
         <main className="flex-1 p-4">
           <div className="mb-4 relative">
