@@ -5,6 +5,7 @@ const nextConfig = {
         appDir: true,
       },
     distDir: 'build',
+    output: 'standalone'
   }
   
   module.exports = nextConfig
