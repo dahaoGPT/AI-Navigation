@@ -167,7 +167,7 @@ export default function AINavigation() {
 
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
+            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-40">
               <Menu className="h-4 w-4" />
               <span className="sr-only">打开菜单</span>
             </Button>
@@ -194,7 +194,7 @@ export default function AINavigation() {
               onChange={handleSearch}
               className="w-full pl-10 pr-10"
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 z-50" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
             {searchQuery && (
               <Button
                 onClick={clearSearch}
