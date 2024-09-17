@@ -71,16 +71,22 @@ export default function AINavigation() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredWebsites, setFilteredWebsites] = useState(aiWebsites)
   const [openCategories, setOpenCategories] = useState<string[]>([])
-
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  // 当选中的类别或搜索查询发生变化时，重新筛选AI网站列表
   useEffect(() => {
-    const filtered = aiWebsites.filter(site => {
-      const matchesCategory = selectedCategory === 'all' || site.category === selectedCategory
-      const matchesSearch = site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            site.description.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesCategory && matchesSearch
-    })
-    setFilteredWebsites(filtered)
-  }, [selectedCategory, searchQuery])
+  // 过滤出符合条件的网站列表
+  const filtered = aiWebsites.filter(site => {
+    // 检查网站类别是否符合当前筛选条件
+    const matchesCategory = selectedCategory === 'all' || site.category === selectedCategory;
+    // 检查网站名称或描述是否包含搜索关键词
+    const matchesSearch = site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           site.description.toLowerCase().includes(searchQuery.toLowerCase());
+    // 返回满足类别和搜索条件的网站
+    return matchesCategory && matchesSearch;
+  });
+  // 更新筛选后的网站列表状态
+  setFilteredWebsites(filtered);
+}, [selectedCategory, searchQuery]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
@@ -159,7 +165,7 @@ export default function AINavigation() {
           {renderNavigation()}
         </aside>
 
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4 z-10">
               <Menu className="h-4 w-4" />
