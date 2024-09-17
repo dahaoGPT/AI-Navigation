@@ -194,7 +194,7 @@ export default function AINavigation() {
               onChange={handleSearch}
               className="w-full pl-10 pr-10"
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 z-50" />
             {searchQuery && (
               <Button
                 onClick={clearSearch}

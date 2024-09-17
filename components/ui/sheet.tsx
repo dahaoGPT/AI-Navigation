@@ -109,7 +109,7 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/20" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
       <div
         className={`fixed ${sideStyles[side]} w-full sm:max-w-sm bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : translateStyles[side]}`}
       >
