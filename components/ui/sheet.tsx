@@ -90,32 +90,45 @@ export const SheetTrigger: React.FC<SheetTriggerProps> = ({ children, asChild, o
  * @param {side} - 可选参数，指定 SheetContent 从哪个方向滑出. 默认值为 'left'.
  * 可以是 'left', 'right', 'top', 或 'bottom' 之一.
  */
-export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'right', isOpen, onClose }) => {
-  let sideClasses = '';
-
-  // 根据 `side` 的值应用不同的样式
-  switch (side) {
-    case 'left':
-      sideClasses = 'inset-y-0 left-0';
-      break;
-    case 'right':
-      sideClasses = 'inset-y-0 right-0';
-      break;
-    case 'top':
-      sideClasses = 'inset-x-0 top-0';
-      break;
-    case 'bottom':
-      sideClasses = 'inset-x-0 bottom-0';
-      break;
-    default:
-      sideClasses = 'inset-y-0 left-0';
+export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'left', isOpen, onClose }) => {
+  const sideStyles = {
+    top: 'top-0 left-0 right-0',
+    right: 'top-0 right-0 bottom-0',
+    bottom: 'bottom-0 left-0 right-0',
+    left: 'top-0 left-0 bottom-0'
   }
 
- return (
-  <div className={`fixed ${sideClasses} z-50 h-full w-3/4 max-w-xs bg-background p-6 shadow-lg transition-transform md:hidden`}>
-    {children}
-  </div>
-);}
+  const translateStyles = {
+    top: 'translate-y-[-100%]',
+    right: 'translate-x-full',
+    bottom: 'translate-y-full',
+    left: 'translate-x-[-100%]'
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/20" onClick={onClose} />
+      <div
+        className={`fixed ${sideStyles[side]} w-full sm:max-w-sm bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : translateStyles[side]}`}
+      >
+        <div className="h-full overflow-y-auto p-6">
+          <button
+            className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700"
+            onClick={onClose}
+            aria-label="Close sheet"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          {children}
+        </div>
+      </div>
+    </>
+  )
+}
 /**
  * SheetHeader 组件用于在页面或组件的顶部展示一些标题或辅助说明文字。
  * 它接收一个 React 节点作为子元素，并将其显示在一个具有底部边距的 div 容器中。
