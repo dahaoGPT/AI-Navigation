@@ -160,7 +160,7 @@ export default function AINavigation() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 text-center">
-        <h1 className="text-3xl font-bold">AI导航站</h1>
+        <h1 className="text-3xl font-bold">小熊AI导航站</h1>
         <p className="mt-2">发现和探索最新的AI工具和网站</p>
       </header>
 
