@@ -109,11 +109,11 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/20 z-50" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/20 z-20" onClick={onClose} />
       <div
         className={`fixed ${sideStyles[side]} w-full sm:max-w-sm bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : translateStyles[side]}`}
       >
-        <div className="h-full overflow-y-auto p-6">
+        <div className="h-full overflow-y-auto p-6 z-30">
           <button
             className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700"
             onClick={onClose}
