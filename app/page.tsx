@@ -72,6 +72,8 @@ export default function AINavigation() {
   const [filteredWebsites, setFilteredWebsites] = useState(aiWebsites)
   const [openCategories, setOpenCategories] = useState<string[]>([])
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [activeNavItem, setActiveNavItem] = useState<string | null>(null); // 用于跟踪选中的导航项
+  const [hoveredNavItem, setHoveredNavItem] = useState<string | null>(null); // 当前悬浮的导航项
   // 当选中的类别或搜索查询发生变化时，重新筛选AI网站列表
   useEffect(() => {
   // 过滤出符合条件的网站列表
@@ -133,16 +135,18 @@ export default function AINavigation() {
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <ul className="ml-4 space-y-2 mt-2">
+                <ul className="ml-4 space-y-2 mt-2" >
                   {category.subcategories.map(subcat => (
-                    <li key={subcat.id}>
+                    <li key={subcat.id} className={`nav-item ${activeNavItem === subcat.id ? 'active' : ''}`}>
                       <Button
                         onClick={() => {
                           setSelectedCategory(subcat.id);
                           setIsSheetOpen(false);
+                          setActiveNavItem(subcat.id)    
                         }}
+                        onMouseOver={() => setHoveredNavItem(subcat.id)}
                         variant={selectedCategory === subcat.id ? 'default' : 'ghost'}
-                        className="w-full justify-start text-sm"
+                        className="w-full justify-start text-sm "
                       >
                         {subcat.name}
                       </Button>

@@ -1,0 +1,14 @@
+
+  /* 鼠标悬停样式 */
+  .nav-item:hover {
+    background-color: #d9a5da; /* 鼠标悬停时的背景颜色 */
+    color: white; /* 选中项的文字颜色 */
+  }
+  
+  /* 选中项样式 */
+  .nav-item.active {
+    background-color: #d9a5da; /* 选中项的背景颜色 */
+    color: white; /* 选中项的文字颜色 */
+    font-weight: bold; /* 选中项的字体加粗 */
+  }
+  

@@ -1,5 +1,5 @@
 import React, { useState,useEffect,ReactElement,ReactNode } from 'react'
-
+import './sheet.css';
 /**
  * Sheet组件
  * 
@@ -30,7 +30,7 @@ interface SheetContentProps {
 }
 export const Sheet: React.FC<SheetProps> = ({ children, open, onOpenChange }) => {
   const [isOpen, setIsOpen] = useState(open || false)
-
+  
   useEffect(() => {
     if (open !== undefined) {
       setIsOpen(open)
