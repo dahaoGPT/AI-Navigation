@@ -137,7 +137,10 @@ export default function AINavigation() {
                   {category.subcategories.map(subcat => (
                     <li key={subcat.id}>
                       <Button
-                        onClick={() => setSelectedCategory(subcat.id)}
+                        onClick={() => {
+                          setSelectedCategory(subcat.id);
+                          setIsSheetOpen(false);
+                        }}
                         variant={selectedCategory === subcat.id ? 'default' : 'ghost'}
                         className="w-full justify-start text-sm"
                       >
