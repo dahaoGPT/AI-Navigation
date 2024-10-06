@@ -103,6 +103,7 @@ export default function AINavigation() {
         : [...prev, categoryId]
     )
   }
+  
 
   const renderNavigation = () => (
     <nav>
@@ -167,12 +168,12 @@ export default function AINavigation() {
 
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4">
+            <Button variant="outline" size="icon" className="md:hidden fixed left-4 top-4" >
               <Menu className="h-4 w-4" />
               <span className="sr-only">打开菜单</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
+          <SheetContent side="left" >
             <SheetHeader>
               <SheetTitle>类别</SheetTitle>
               <SheetDescription>
