@@ -21,20 +21,21 @@ import {
 
 const categories = [
   {
+    id: 'language',
+    name: '语言处理',
+    subcategories: [
+      { id: 'ppt-generation', name: 'ppt生成' },
+      { id: 'chatbots', name: '聊天机器人' },
+      { id: 'text-to-speech', name: '文字转语音' },
+      { id: 'translation', name: '翻译' },
+    ]
+  },
+  {
     id: 'image',
     name: '图像处理',
     subcategories: [
       { id: 'image-generation', name: '图像生成' },
       { id: 'image-editing', name: '图像编辑' },
-    ]
-  },
-  {
-    id: 'language',
-    name: '语言处理',
-    subcategories: [
-      { id: 'chatbots', name: '聊天机器人' },
-      { id: 'text-to-speech', name: '文字转语音' },
-      { id: 'translation', name: '翻译' },
     ]
   },
   {
@@ -64,6 +65,7 @@ const aiWebsites = [
   { id: 6, name: 'Canva', url: 'https://www.canva.com', category: 'image-editing', description: 'AI驱动的图像编辑工具' },
   { id: 7, name: 'DeepL', url: 'https://www.deepl.com', category: 'translation', description: 'AI驱动的翻译工具' },
   { id: 8, name: 'Tableau', url: 'https://www.tableau.com', category: 'data-visualization', description: 'AI增强的数据可视化平台' },
+  { id: 9, name: 'AI-powered PPT', url: 'https://www.aippt.cn/', category: 'ppt-generation', description: 'AI增强的数据可视化平台' },
 ]
 
 export default function AINavigation() {
