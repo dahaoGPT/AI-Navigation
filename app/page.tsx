@@ -97,7 +97,7 @@ export default function AINavigation() {
   
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/route', {
+      const response = await fetch('/api/route', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
