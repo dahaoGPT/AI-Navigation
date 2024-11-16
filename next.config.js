@@ -5,7 +5,6 @@ const nextConfig = {
       appDir: true,
     },
   distDir: 'build',
-  port: 80, // port: 3000,
 };
 
 module.exports = nextConfig;
