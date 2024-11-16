@@ -333,6 +333,42 @@ export default function AINavigation() {
           )}
         </main>
       </div>
+      <footer className="bg-gray-100 text-gray-600 py-4">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-2">
+            <p>&copy; 2024 小熊AI导航站. All rights reserved.</p>
+          </div>
+          <div className="flex flex-wrap justify-center items-center space-x-4">
+            <a href="#" className="hover:text-purple-500 transition-colors">
+              关于我们
+            </a>
+            <a href="#" className="hover:text-purple-500 transition-colors">
+              隐私政策
+            </a>
+            <a href="#" className="hover:text-purple-500 transition-colors">
+              联系我们
+            </a>
+            <div className="flex space-x-4 mt-2 sm:mt-0">
+              <a href="#" aria-label="Facebook" className="hover:text-purple-500 transition-colors">
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Twitter" className="hover:text-purple-500 transition-colors">
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+                </svg>
+              </a>
+              <a href="#" aria-label="Instagram" className="hover:text-purple-500 transition-colors">
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
+    
   )
 }
