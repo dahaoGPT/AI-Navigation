@@ -1,3 +1,33 @@
+/**
+ * AINavigation Component
+ * 
+ * A React component that provides a navigation interface for AI-related websites and tools.
+ * 
+ * Features:
+ * - Categorized navigation of AI websites and tools
+ * - Search functionality for finding specific tools
+ * - Responsive design with mobile-friendly navigation drawer
+ * - Dynamic filtering based on categories and search queries
+ * - Integration with external API for fetching website data
+ * 
+ * Component Structure:
+ * - Header with title and description
+ * - Sidebar navigation (desktop) / Sheet navigation (mobile)
+ * - Main content area with searchable grid of AI websites
+ * - Footer with social links and additional information
+ * 
+ * State Management:
+ * - Manages loading state for data fetching
+ * - Tracks selected categories and search queries
+ * - Maintains list of AI websites and filtered results
+ * - Handles navigation state (open categories, active items)
+ * 
+ * @component
+ * @example
+ * return (
+ *   <AINavigation />
+ * )
+ */
 'use client'
 
 import { useState, useEffect } from 'react'
