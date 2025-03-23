@@ -9,6 +9,10 @@ AI Navigation 是一个智能导航系统，旨在为用户提供智能化的路
 - 多模态交互界面
 - 自适应路径优化
 
+## 系统架构
+
+![AI Navigation 系统架构](./public/architecture.svg)
+
 ## 技术栈
 
 - 前端：React + TypeScript

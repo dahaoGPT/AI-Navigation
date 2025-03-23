@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="3" stdDeviation="3" flood-color="#333" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- 背景 -->
+  <rect width="800" height="600" fill="#f8f9fa" />
+  
+  <!-- 标题 -->
+  <text x="400" y="50" font-family="Arial, sans-serif" font-size="24" text-anchor="middle" font-weight="bold">AI Navigation 系统架构</text>
+  
+  <!-- 前端部分 -->
+  <g>
+    <rect x="100" y="100" width="200" height="150" rx="10" ry="10" fill="#61dafb" fill-opacity="0.7" stroke="#333" stroke-width="2" filter="url(#shadow)" />
+    <text x="200" y="130" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="bold">前端</text>
+    <text x="200" y="160" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">React + TypeScript</text>
+    <text x="200" y="185" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 用户界面</text>
+    <text x="200" y="205" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 路径可视化</text>
+    <text x="200" y="225" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 用户交互</text>
+  </g>
+  
+  <!-- 后端部分 -->
+  <g>
+    <rect x="500" y="100" width="200" height="150" rx="10" ry="10" fill="#68a063" fill-opacity="0.7" stroke="#333" stroke-width="2" filter="url(#shadow)" />
+    <text x="600" y="130" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="bold">后端</text>
+    <text x="600" y="160" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Node.js + Express</text>
+    <text x="600" y="185" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- API服务</text>
+    <text x="600" y="205" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 路径计算</text>
+    <text x="600" y="225" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 数据处理</text>
+  </g>
+  
+  <!-- 数据库部分 -->
+  <g>
+    <rect x="500" y="350" width="200" height="120" rx="10" ry="10" fill="#4db33d" fill-opacity="0.7" stroke="#333" stroke-width="2" filter="url(#shadow)" />
+    <text x="600" y="380" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="bold">数据库</text>
+    <text x="600" y="410" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">notion</text>
+    <text x="600" y="435" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 地图数据</text>
+    <text x="600" y="455" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 用户信息</text>
+  </g>
+  
+  <!-- AI模型部分 -->
+  <g>
+    <rect x="100" y="350" width="200" height="120" rx="10" ry="10" fill="#ff6f00" fill-opacity="0.7" stroke="#333" stroke-width="2" filter="url(#shadow)" />
+    <text x="200" y="380" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" font-weight="bold">AI模型</text>
+    <text x="200" y="410" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">TensorFlow.js</text>
+    <text x="200" y="435" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 路径优化</text>
+    <text x="200" y="455" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">- 交通预测</text>
+  </g>
+  
+  <!-- 连接线 -->
+  <!-- 前端到后端 -->
+  <g>
+    <line x1="300" y1="175" x2="500" y2="175" stroke="#333" stroke-width="2" />
+    <polygon points="490,170 500,175 490,180" fill="#333" />
+    <text x="400" y="165" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">HTTP/REST</text>
+  </g>
+  
+  <!-- 后端到数据库 -->
+  <g>
+    <line x1="600" y1="250" x2="600" y2="350" stroke="#333" stroke-width="2" />
+    <polygon points="595,340 600,350 605,340" fill="#333" />
+    <text x="620" y="300" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">查询/存储</text>
+  </g>
+  
+  <!-- 后端到AI模型 -->
+  <g>
+    <line x1="500" y1="200" x2="300" y2="350" stroke="#333" stroke-width="2" />
+    <polygon points="305,340 300,350 310,345" fill="#333" />
+    <text x="380" y="290" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">模型调用</text>
+  </g>
+  
+  <!-- 前端到AI模型 -->
+  <g>
+    <line x1="200" y1="250" x2="200" y2="350" stroke="#333" stroke-width="2" />
+    <polygon points="195,340 200,350 205,340" fill="#333" />
+    <text x="220" y="300" font-family="Arial, sans-serif" font-size="12" text-anchor="middle">客户端推理</text>
+  </g>
+</svg>
