@@ -20,7 +20,7 @@
     "tailwindcss": "^3.4.11"
   },
   "scripts": {
-    "dev": "cross-env PORT=80 next dev",
+    "dev": "cross-env PORT=8080 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
