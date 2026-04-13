@@ -78,12 +78,23 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
     left: 'translate-x-[-100%]'
   }
 
+  useEffect(() => {
+    if (!isOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10" onClick={onClose} />
-      <div className={`fixed ${sideStyles[side]} w-3/4 sm:max-w-sm bg-dark-950/95 backdrop-blur-xl z-20 shadow-glass transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-neon-blue/10' : side === 'right' ? 'border-l border-neon-blue/10' : ''}`}>
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]" onClick={onClose} />
+      <div className={`fixed ${sideStyles[side]} w-full sm:w-3/4 sm:max-w-sm bg-dark-950/95 backdrop-blur-xl z-[70] shadow-glass transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-neon-blue/10' : side === 'right' ? 'border-l border-neon-blue/10' : ''}`}>
         <div className="h-full overflow-y-auto p-6">
           <button
             className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-300 hover:bg-white/5 rounded-lg transition-all duration-200"

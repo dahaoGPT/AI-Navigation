@@ -17,14 +17,6 @@ import { useState, useEffect } from 'react'
 import { Menu, Search, X, ExternalLink, ChevronDown, Sparkles, Compass, Github, Twitter, Mail, ArrowUpRight, Zap } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import {
   Collapsible,
@@ -194,6 +186,17 @@ export default function AINavigation() {
     setFilteredWebsites(filtered);
   }, [aiWebsites, selectedCategory, searchQuery]);
 
+  useEffect(() => {
+    if (!isSheetOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isSheetOpen])
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value)
   }
@@ -326,32 +329,15 @@ export default function AINavigation() {
           {/* Logo 区域 */}
           <div className="flex items-center gap-3">
             {/* 移动端菜单按钮 */}
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="md:hidden h-9 w-9 text-slate-400 hover:text-neon-blue hover:bg-neon-blue/10"
-                >
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">打开菜单</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetHeader>
-                  <SheetTitle className="flex items-center gap-2 text-slate-200">
-                    <Sparkles className="h-5 w-5 text-neon-blue" />
-                    AI工具分类
-                  </SheetTitle>
-                  <SheetDescription className="text-slate-500">
-                    选择一个类别来筛选AI工具
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-6">
-                  {renderNavigation()}
-                </div>
-              </SheetContent>
-            </Sheet>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden h-9 w-9 text-slate-400 hover:text-neon-blue hover:bg-neon-blue/10"
+              onClick={() => setIsSheetOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">打开菜单</span>
+            </Button>
 
             {/* Logo */}
             <div className="flex items-center gap-2.5">
@@ -415,6 +401,37 @@ export default function AINavigation() {
           <div className="loading-bar" />
         )}
       </header>
+
+      {/* 移动端全屏分类抽屉 */}
+      {isSheetOpen && (
+        <div className="fixed inset-0 z-[80] md:hidden">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsSheetOpen(false)}
+          />
+          <div className="absolute inset-y-0 left-0 w-full max-w-full bg-dark-950/95 backdrop-blur-xl border-r border-neon-blue/10">
+            <div className="h-full overflow-y-auto p-6">
+              <button
+                className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-300 hover:bg-white/5 rounded-lg transition-all duration-200"
+                onClick={() => setIsSheetOpen(false)}
+                aria-label="Close menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-neon-blue" />
+                  AI工具分类
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">选择一个类别来筛选AI工具</p>
+              </div>
+              <div className="mt-6">
+                {renderNavigation()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== 主内容区 ===== */}
       <div className="flex flex-1 max-w-[1600px] mx-auto w-full">
