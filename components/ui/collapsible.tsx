@@ -77,6 +77,13 @@ export const CollapsibleContent: React.FC<CollapsibleContentProps> = ({ children
   if (!isOpen) {
     return null
   }
-
-  return <div>{children}</div>
+// 修复后：始终保留 DOM，用 CSS 控制显隐
+  return (
+  <div
+    className="grid transition-all duration-200 ease-in-out"
+    style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+  >
+    <div className="overflow-hidden">{children}</div>
+  </div>
+  )
 }

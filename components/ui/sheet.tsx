@@ -77,12 +77,24 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
     left: 'translate-x-[-100%]'
   }
 
+  // Lock body scroll when sheet is open (from remote fix)
+  useEffect(() => {
+    if (!isOpen) return
+
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-10" onClick={onClose} />
-      <div className={`fixed ${sideStyles[side]} w-[80%] sm:max-w-sm bg-[#0e0d13]/98 backdrop-blur-2xl z-20 shadow-[0_0_60px_rgba(0,0,0,0.6)] transform transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-[rgba(212,168,83,0.08)]' : side === 'right' ? 'border-l border-[rgba(212,168,83,0.08)]' : ''}`}>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[60]" onClick={onClose} />
+      <div className={`fixed ${sideStyles[side]} w-full sm:w-3/4 sm:max-w-sm bg-[#0e0d13]/98 backdrop-blur-2xl z-[70] shadow-[0_0_60px_rgba(0,0,0,0.6)] transform transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-[rgba(212,168,83,0.08)]' : side === 'right' ? 'border-l border-[rgba(212,168,83,0.08)]' : ''}`}>
         <div className="h-full overflow-y-auto p-6">
           <button
             className="absolute top-5 right-5 p-2 text-[#5a5650] hover:text-[#c8c2b4] hover:bg-[rgba(212,168,83,0.08)] rounded-xl transition-all duration-200"

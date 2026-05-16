@@ -92,9 +92,35 @@ export default function AINavigation() {
     }));
   }, [aiWebsites, selectedCategory, searchQuery]);
 
-  const toggleCategory = (id: string) => setOpenCategories(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
-  const getParentCategory = (subcatId: string) => categories.find(cat => cat.subcategories.some(sub => sub.id === subcatId))
-  const getSubcategoryName = (subcatId: string) => { for (const cat of categories) { const sub = cat.subcategories.find(s => s.id === subcatId); if (sub) return sub.name; } return subcatId; }
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+  }
+
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    )
+  }
+
+  // 获取网站所属的大类
+  const getParentCategory = (subcatId: string) => {
+    return categories.find(cat => cat.subcategories.some(sub => sub.id === subcatId))
+  }
+
+  // 获取子分类名称
+  const getSubcategoryName = (subcatId: string) => {
+    for (const cat of categories) {
+      const sub = cat.subcategories.find(s => s.id === subcatId)
+      if (sub) return sub.name
+    }
+    return subcatId
+  }
 
   const renderNavigation = () => (
     <nav className="space-y-1">
@@ -192,10 +218,10 @@ export default function AINavigation() {
           <div className="hidden md:flex flex-1 max-w-lg mx-8">
             <div className="relative w-full group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5a5650] group-focus-within:text-[#d4a853] transition-colors duration-300" />
-              <Input type="text" placeholder="搜索 AI 工具..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+              <Input type="text" placeholder="搜索 AI 工具..." value={searchQuery} onChange={handleSearch}
                 className="w-full pl-11 pr-10 h-10 rounded-xl glass-input text-sm" />
               {searchQuery && (
-                <Button onClick={() => setSearchQuery('')} variant="ghost" size="icon"
+                <Button onClick={clearSearch} variant="ghost" size="icon"
                   className="absolute right-1.5 top-1/2 -translate-y-1/2 h-7 w-7 text-[#5a5650] hover:text-[#c8c2b4] rounded-lg">
                   <X className="h-3.5 w-3.5" />
                 </Button>
@@ -237,10 +263,10 @@ export default function AINavigation() {
           <div className="md:hidden mb-6">
             <div className="relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#5a5650] group-focus-within:text-[#d4a853] transition-colors duration-300" />
-              <Input type="text" placeholder="搜索 AI 工具..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+              <Input type="text" placeholder="搜索 AI 工具..." value={searchQuery} onChange={handleSearch}
                 className="w-full pl-11 pr-10 h-11 rounded-xl glass-input text-sm" />
               {searchQuery && (
-                <Button onClick={() => setSearchQuery('')} variant="ghost" size="icon"
+                <Button onClick={clearSearch} variant="ghost" size="icon"
                   className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 text-[#5a5650] hover:text-[#c8c2b4] rounded-lg">
                   <X className="h-4 w-4" />
                 </Button>
@@ -277,7 +303,7 @@ export default function AINavigation() {
                 {selectedCategory === 'all' ? '全部工具' : getSubcategoryName(selectedCategory)}
               </h2>
               <p className="text-xs text-[#5a5650] mt-1 font-mono">
-                {filteredWebsites.length} 个结果{searchQuery && <span> · "{searchQuery}"</span>}
+                {filteredWebsites.length} 个结果{searchQuery && <span> · &ldquo;{searchQuery}&rdquo;</span>}
               </p>
             </div>
             {selectedCategory !== 'all' && (
