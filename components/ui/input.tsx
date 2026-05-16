@@ -5,7 +5,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
 export const Input: React.FC<InputProps> = ({ className = '', ...props }) => {
   return (
     <input
-      className={`flex h-10 w-full rounded-lg border border-white/10 bg-dark-900/50 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-600 focus-visible:outline-none focus-visible:border-neon-blue/40 focus-visible:ring-1 focus-visible:ring-neon-blue/20 focus-visible:shadow-[0_0_20px_rgba(0,212,255,0.08)] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 ${className}`}
+      className={`flex h-10 w-full rounded-xl border border-[rgba(212,168,83,0.12)] bg-[rgba(21,20,28,0.8)] px-4 py-2 text-sm text-[#f0ece4] placeholder:text-[#5a5650] focus-visible:outline-none focus-visible:border-[#d4a853] focus-visible:ring-[3px] focus-visible:ring-[rgba(212,168,83,0.12)] focus-visible:shadow-[0_0_24px_rgba(212,168,83,0.06)] disabled:cursor-not-allowed disabled:opacity-40 transition-all duration-300 backdrop-blur-sm ${className}`}
       {...props}
     />
   )

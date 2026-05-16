@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactElement, ReactNode } from 'react'
-import './sheet.css';
 
 interface SheetProps {
   children: React.ReactNode;
@@ -82,16 +81,16 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-10" onClick={onClose} />
-      <div className={`fixed ${sideStyles[side]} w-3/4 sm:max-w-sm bg-dark-950/95 backdrop-blur-xl z-20 shadow-glass transform transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-neon-blue/10' : side === 'right' ? 'border-l border-neon-blue/10' : ''}`}>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-10" onClick={onClose} />
+      <div className={`fixed ${sideStyles[side]} w-[80%] sm:max-w-sm bg-[#0e0d13]/98 backdrop-blur-2xl z-20 shadow-[0_0_60px_rgba(0,0,0,0.6)] transform transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] ${isOpen ? 'translate-x-0' : translateStyles[side]} ${side === 'left' ? 'border-r border-[rgba(212,168,83,0.08)]' : side === 'right' ? 'border-l border-[rgba(212,168,83,0.08)]' : ''}`}>
         <div className="h-full overflow-y-auto p-6">
           <button
-            className="absolute top-4 right-4 p-2 text-slate-500 hover:text-slate-300 hover:bg-white/5 rounded-lg transition-all duration-200"
+            className="absolute top-5 right-5 p-2 text-[#5a5650] hover:text-[#c8c2b4] hover:bg-[rgba(212,168,83,0.08)] rounded-xl transition-all duration-200"
             onClick={onClose}
-            aria-label="Close sheet"
+            aria-label="关闭面板"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
           {children}
@@ -102,13 +101,13 @@ export const SheetContent: React.FC<SheetContentProps> = ({ children, side = 'le
 }
 
 export const SheetHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="mb-4">{children}</div>
+  return <div className="mb-6">{children}</div>
 }
 
 export const SheetTitle: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => {
-  return <h3 className={`text-lg font-semibold text-slate-200 ${className}`}>{children}</h3>;
+  return <h3 className={`text-lg font-semibold text-[#f0ece4] tracking-tight ${className}`}>{children}</h3>;
 };
 
 export const SheetDescription: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => {
-  return <p className={`text-sm text-slate-500 mt-1 ${className}`}>{children}</p>
+  return <p className={`text-sm text-[#5a5650] mt-1.5 ${className}`}>{children}</p>
 }
