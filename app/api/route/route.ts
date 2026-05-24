@@ -1,22 +1,29 @@
-import { NextResponse,NextRequest } from 'next/server';
-import { Client } from '@notionhq/client';
-
-// 初始化 Notion 客户端
-const notion = new Client({ auth: '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' });
+import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  try {
-    // console.log('Received POST request wow');
-    // const requestBody = await req.json();
-    //12c9f6274293800fb5f1c44a22943bb7
-    //1259f6274293801397c9ca6a67876146
-    const databaseId = '1259f6274293801397c9ca6a67876146';
+  const notionKey = process.env.NOTION_KEY;
+  const databaseId = process.env.NOTION_PAGE_ID;
 
-    const response = await notion.databases.query({
-      database_id: databaseId,
+  if (!notionKey || !databaseId) {
+    return NextResponse.json(
+      { error: 'Notion integration is not configured' },
+      { status: 503 }
+    );
+  }
+
+  try {
+    const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${notionKey}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28',
+      },
     });
 
-    return NextResponse.json(response, { status: 200 });
+    const data = await response.json();
+
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

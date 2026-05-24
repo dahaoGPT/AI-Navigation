@@ -1,9 +1,19 @@
 import './globals.css'
+import Script from 'next/script'
+import { siteConfig } from './site-config'
 
 export const metadata = {
-  title: '小熊AI导航 — 探索无限可能',
-  description: '精心策划的 AI 工具图鉴，发现最前沿的人工智能工具与平台',
-  keywords: 'AI工具, 人工智能, ChatGPT, Midjourney, AI导航, 工具推荐',
+  title: '小熊AI导航 - 普通人的 AI 工具指南',
+  description: siteConfig.description,
+  keywords: 'AI工具, 人工智能, ChatGPT, Midjourney, AI导航, AI工具推荐, AI使用指南',
+  openGraph: {
+    title: '小熊AI导航 - 普通人的 AI 工具指南',
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    locale: 'zh_CN',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({
@@ -11,18 +21,22 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const adsenseClient = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT
+
   return (
     <html lang="zh-CN" className="dark">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
         <meta name="theme-color" content="#08070b" />
       </head>
       <body className="bg-[#08070b] text-[#c8c2b4] antialiased">
+        {adsenseClient && (
+          <Script
+            async
+            strategy="afterInteractive"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            crossOrigin="anonymous"
+          />
+        )}
         {children}
       </body>
     </html>

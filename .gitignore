@@ -4,3 +4,6 @@ node_modules/
 build/
 .vercel
 .agent
+.env
+.env.local
+.env*.local
