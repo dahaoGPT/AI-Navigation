@@ -4,6 +4,7 @@ node_modules/
 build/
 .vercel
 .agent
+tsconfig.tsbuildinfo
 .env
 .env.local
 .env*.local

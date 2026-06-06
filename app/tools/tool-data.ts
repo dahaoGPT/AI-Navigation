@@ -17,6 +17,21 @@ export type ToolDetail = {
   lastUpdated: string
 }
 
+export function createToolMetadata(tool: ToolDetail) {
+  return {
+    title: `${tool.name} 怎么用 | 小熊AI导航`,
+    description: `${tool.description} 适合${tool.bestFor.slice(0, 3).join('、')}参考。最后更新：${tool.lastUpdated}，价格和授权以官网为准。`,
+    alternates: {
+      canonical: `/tools/${tool.slug}`,
+    },
+    openGraph: {
+      title: `${tool.name} 怎么用 | 小熊AI导航`,
+      description: tool.description,
+      type: 'article',
+    },
+  }
+}
+
 export const toolDetails: ToolDetail[] = [
   {
     id: 1,

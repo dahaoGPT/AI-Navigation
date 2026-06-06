@@ -1,61 +1,89 @@
-# AI Navigation
+# 小熊AI导航
 
-AI Navigation 是一个智能导航系统，旨在为用户提供智能化的路径规划和导航服务。
+面向普通用户的 AI 工具导航与使用指南。项目按真实场景、任务类型和工具能力组织内容，帮助学生、上班族、创作者、开发者和小团队更快判断“该先试哪个 AI 工具”。
 
-## 功能特点
+## 项目内容
 
-- 智能路径规划
-- 实时导航指引
-- 多模态交互界面
-- 自适应路径优化
-
-## 系统架构
-
-![AI Navigation 系统架构](./public/architecture.svg)
+- AI 工具列表：覆盖聊天助手、PPT 生成、翻译、图像生成、图像编辑、代码辅助和数据分析等方向。
+- 场景导航：从学习写作、办公提效、内容创作、开发自动化等真实需求进入。
+- 使用指南：提供工作流、风险提醒、核对清单和常见问题。
+- 工具对比：按人群、预算、难度、产出要求给出选择建议。
+- 工具详情页：说明适合人群、典型用途、替代工具、价格提示、限制和最后更新时间。
 
 ## 技术栈
 
-- 前端：React + TypeScript
-- 后端：Node.js + Express
-- 数据库：MongoDB
-- AI 模型：TensorFlow.js
+- Next.js 13 App Router
+- React 18
+- TypeScript
+- Tailwind CSS
+- lucide-react
 
-## 安装说明
-
-1. 克隆仓库
+## 本地运行
 
 ```bash
-git clone https://github.com/your-username/AI-Navigation.git
+npm install
+npm run dev
 ```
 
-AI-Navigation/
-├── src/
-│ ├── components/ # React 组件
-│ ├── services/ # 业务逻辑服务
-│ ├── utils/ # 工具函数
-│ └── pages/ # 页面组件
-├── public/ # 静态资源
-└── docs/ # 项目文档
+开发服务默认运行在：
 
-## 使用说明
+```text
+http://localhost:8080
+```
 
-1. 打开应用后，在搜索框中输入目的地
-2. 系统会自动计算最优路径
-3. 按照导航指示前进即可
+## 可用脚本
 
-## 贡献指南
+```bash
+npm test
+npm run build
+npm run lint
+```
 
-欢迎提交 Pull Request 或创建 Issue。
+`npm test` 目前覆盖内容数据适配和工具页 metadata 生成。`npm run build` 会执行 Next.js 生产构建。
+
+## 数据来源与降级
+
+首页优先尝试从 Notion 数据库读取工具列表：
+
+- `NOTION_KEY`
+- `NOTION_PAGE_ID`
+
+如果 Notion 未配置、接口不可用或返回数据不完整，页面会回退到仓库内的本地工具数据，避免首页直接不可用。
+
+## 内容维护原则
+
+- 工具价格、授权、可用地区和功能变化较快，详情页只做选择参考，不替代官网说明。
+- 正式订阅、商用或处理敏感资料前，应再次查看工具官网条款。
+- 新增工具时，请同步补充 `lastUpdated`、适合人群、典型用途、优点、限制和替代工具。
+- 新增导航维度时，优先从用户任务出发，而不是只按技术分类堆列表。
+
+## 目录结构
+
+```text
+app/
+  page.tsx                 首页壳层和主要状态
+  home-content.tsx         首页场景、指南和对比入口
+  navigation-data.ts       侧边栏、任务筛选和工具分类数据
+  tools/
+    tool-data.ts           本地工具详情数据
+    notion-adapter.ts      Notion 数据适配层
+    [slug]/page.tsx        工具详情页
+  guides/                  使用指南
+  scenarios/               使用场景
+  compare/                 工具对比
+components/ui/             基础 UI 组件
+tests/                     轻量单元测试
+```
+
+## 部署
+
+项目可部署到 Vercel 或其他支持 Next.js 的平台。部署前建议配置：
+
+- `NEXT_PUBLIC_SITE_URL`
+- `NOTION_KEY`
+- `NOTION_PAGE_ID`
+- `NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT`（如需要广告）
 
 ## 许可证
 
-本项目采用 MIT 许可证。详见 LICENSE 文件。
-
-## 联系方式
-
-- 项目维护者：hzhu
-- 邮箱：[ 1369129052@qq.com ]
-
-## 致谢
-
-感谢所有为这个项目做出贡献的开发者。
+MIT

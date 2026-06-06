@@ -7,6 +7,16 @@ export type ToolFilter = {
   description: string
 }
 
+export type ToolCategory = {
+  id: string
+  name: string
+  icon: string
+  subcategories: {
+    id: string
+    name: string
+  }[]
+}
+
 export type NavLink = {
   href: string
   label: string
@@ -92,6 +102,22 @@ export const sidebarNavigationSections: SidebarNavigationSection[] = [
     collapsible: true,
     defaultOpen: true,
   },
+]
+
+export const toolCategories: ToolCategory[] = [
+  { id: 'language', name: '语言处理', icon: '✦', subcategories: [
+    { id: 'ppt-generation', name: 'PPT生成' }, { id: 'chatbots', name: '聊天机器人' },
+    { id: 'text-to-speech', name: '文字转语音' }, { id: 'translation', name: '翻译' },
+  ]},
+  { id: 'image', name: '图像处理', icon: '◈', subcategories: [
+    { id: 'image-generation', name: '图像生成' }, { id: 'image-editing', name: '图像编辑' },
+  ]},
+  { id: 'coding', name: '编程辅助', icon: '⬡', subcategories: [
+    { id: 'code-generation', name: '代码生成' }, { id: 'code-analysis', name: '代码分析' },
+  ]},
+  { id: 'data', name: '数据分析', icon: '◇', subcategories: [
+    { id: 'data-visualization', name: '数据可视化' }, { id: 'predictive-analysis', name: '预测分析' },
+  ]},
 ]
 
 export const primaryNavLinks: NavLink[] = [

@@ -1,10 +1,22 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ExternalLink } from 'lucide-react'
-import { toolDetails } from '../tool-data'
+import { createToolMetadata, toolDetails } from '../tool-data'
 
 export function generateStaticParams() {
   return toolDetails.map((tool) => ({ slug: tool.slug }))
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const tool = toolDetails.find((item) => item.slug === params.slug)
+
+  if (!tool) {
+    return {
+      title: 'AI 工具未找到 | 小熊AI导航',
+    }
+  }
+
+  return createToolMetadata(tool)
 }
 
 export default function ToolDetailPage({ params }: { params: { slug: string } }) {

@@ -2,50 +2,20 @@
 
 import { useState, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
-import { Menu, Search, X, ExternalLink, ChevronDown, Sparkles, Compass, Github, Twitter, Mail, ArrowUpRight, Zap } from 'lucide-react'
+import { Menu, Search, X, ChevronDown, Sparkles, Compass, Github, Twitter, Mail, Zap } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { footerLinks } from './site-config'
-import { comparisons } from './compare/compare-data'
-import { capabilityGroups, primaryNavLinks, roleNavLinks, sidebarNavigationSections, taskFilters, type SidebarNavigationSection } from './navigation-data'
+import { capabilityGroups, primaryNavLinks, roleNavLinks, sidebarNavigationSections, taskFilters, toolCategories, type SidebarNavigationSection } from './navigation-data'
 import { scenarios } from './scenarios/scenario-data'
 import { toolDetails } from './tools/tool-data'
-import { guides } from './guides/guide-data'
+import { adaptNotionTools, type ToolListing } from './tools/notion-adapter'
+import { HomeContent } from './home-content'
+import { ToolCardGrid } from './tool-card-grid'
 
-const categories = [
-  { id: 'language', name: '语言处理', icon: '✦', subcategories: [
-    { id: 'ppt-generation', name: 'PPT生成' }, { id: 'chatbots', name: '聊天机器人' },
-    { id: 'text-to-speech', name: '文字转语音' }, { id: 'translation', name: '翻译' },
-  ]},
-  { id: 'image', name: '图像处理', icon: '◈', subcategories: [
-    { id: 'image-generation', name: '图像生成' }, { id: 'image-editing', name: '图像编辑' },
-  ]},
-  { id: 'coding', name: '编程辅助', icon: '⬡', subcategories: [
-    { id: 'code-generation', name: '代码生成' }, { id: 'code-analysis', name: '代码分析' },
-  ]},
-  { id: 'data', name: '数据分析', icon: '◇', subcategories: [
-    { id: 'data-visualization', name: '数据可视化' }, { id: 'predictive-analysis', name: '预测分析' },
-  ]},
-]
-
-const getCatColor = (id: string) => {
-  const m: Record<string, string> = {
-    language: 'rgba(126,184,218,', image: 'rgba(201,132,158,',
-    coding: 'rgba(126,203,161,', data: 'rgba(212,168,83,',
-  }
-  return m[id] || 'rgba(212,168,83,'
-}
-
-const getCatTextColor = (id: string) => {
-  const m: Record<string, string> = {
-    language: '#7eb8da', image: '#c9849e', coding: '#7ecba1', data: '#d4a853',
-  }
-  return m[id] || '#d4a853'
-}
-
-const initialTools = toolDetails.map((tool) => ({
+const initialTools: ToolListing[] = toolDetails.map((tool) => ({
   id: tool.id,
   name: tool.name,
   url: tool.url,
@@ -53,8 +23,6 @@ const initialTools = toolDetails.map((tool) => ({
   description: tool.description,
   slug: tool.slug,
 }))
-
-const toolSlugByName = new Map(toolDetails.map((tool) => [tool.name.toLowerCase(), tool.slug]))
 
 const defaultOpenSidebarSections = sidebarNavigationSections
   .filter((section) => 'collapsible' in section && section.collapsible && section.defaultOpen)
@@ -65,7 +33,8 @@ type TitledNavigationSection = Extract<SidebarNavigationSection, { title: string
 
 export default function AINavigation() {
   const [loading, setLoading] = useState(true)
-  const [aiWebsites, setAiWebsites] = useState<Array<any>>(initialTools)
+  const [aiWebsites, setAiWebsites] = useState<ToolListing[]>(initialTools)
+  const [usingLocalTools, setUsingLocalTools] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [navSearchQuery, setNavSearchQuery] = useState('')
@@ -73,7 +42,6 @@ export default function AINavigation() {
   const [openCategories, setOpenCategories] = useState<string[]>(defaultOpenSidebarSections)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [activeNavItem, setActiveNavItem] = useState<string | null>(null)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
   const fetchData = async () => {
     try {
@@ -83,22 +51,21 @@ export default function AINavigation() {
     } catch (error) { console.error('Error fetching data:', error); throw error; }
   };
 
-  const processData = (jsonData: any) => {
-    if (!jsonData || !Array.isArray(jsonData.results)) throw new Error('Invalid data format');
-    return jsonData.results.map((page: any) => ({
-      id: page.properties.ID.unique_id.number,
-      name: page.properties.name.title[0].plain_text,
-      url: page.properties.url.rich_text[0].plain_text,
-      category: page.properties.category.rich_text[0].plain_text,
-      description: page.properties.description.rich_text[0].plain_text,
-      slug: toolSlugByName.get(page.properties.name.title[0].plain_text.toLowerCase()),
-    }));
-  };
-
   useEffect(() => {
     setLoading(true);
-    fetchData().then((data) => { if (data) setAiWebsites(processData(data)); })
-      .catch((e) => console.error("Error loading data:", e))
+    setUsingLocalTools(false);
+    fetchData().then((data) => {
+      const remoteTools = adaptNotionTools(data, toolDetails);
+      if (remoteTools.length > 0) {
+        setAiWebsites(remoteTools);
+      } else {
+        setUsingLocalTools(true);
+      }
+    })
+      .catch((e) => {
+        console.error("Error loading data:", e);
+        setUsingLocalTools(true);
+      })
       .finally(() => setLoading(false));
   }, [])
 
@@ -130,14 +97,9 @@ export default function AINavigation() {
     )
   }
 
-  // 获取网站所属的大类
-  const getParentCategory = (subcatId: string) => {
-    return categories.find(cat => cat.subcategories.some(sub => sub.id === subcatId))
-  }
-
   // 获取子分类名称
   const getSubcategoryName = (subcatId: string) => {
-    for (const cat of categories) {
+    for (const cat of toolCategories) {
       const sub = cat.subcategories.find(s => s.id === subcatId)
       if (sub) return sub.name
     }
@@ -395,7 +357,7 @@ export default function AINavigation() {
           <div className="flex items-center gap-2.5">
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#5a5650] font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d4a853] animate-glow-pulse" />
-              <span>{aiWebsites.length} tools</span>
+              <span>{aiWebsites.length} tools{usingLocalTools ? ' · local' : ''}</span>
             </div>
             <a href="https://github.com/dahaoGPT/AI-Navigation" target="_blank" rel="noopener noreferrer"
               className="h-9 w-9 rounded-xl flex items-center justify-center text-[#5a5650] hover:text-[#d4a853] hover:bg-[rgba(212,168,83,0.08)] transition-all duration-300">
@@ -470,62 +432,7 @@ export default function AINavigation() {
             </div>
           )}
 
-          {selectedCategory === 'all' && !searchQuery && (
-            <section className="mb-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {scenarios.map((scenario) => (
-                <Link
-                  key={scenario.slug}
-                  href={`/scenarios/${scenario.slug}`}
-                  className="rounded-2xl border border-[rgba(212,168,83,0.08)] bg-[rgba(14,13,19,0.66)] p-4 text-left transition-all duration-300 hover:border-[rgba(212,168,83,0.2)] hover:bg-[rgba(28,27,37,0.82)]"
-                >
-                  <h3 className="text-sm font-semibold text-[#f0ece4]">{scenario.title}</h3>
-                  <p className="mt-2 text-xs leading-5 text-[#8a8478]">{scenario.summary}</p>
-                </Link>
-              ))}
-            </section>
-          )}
-
-          {selectedCategory === 'all' && !searchQuery && (
-            <section className="mb-10">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-editorial font-bold text-[#f0ece4]">入门指南</h2>
-                <Link href="/guides" className="text-xs text-[#d4a853] hover:text-[#e8c677]">全部指南</Link>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {guides.map((guide) => (
-                  <Link key={guide.slug} href={`/guides/${guide.slug}`} className="glass-card block rounded-2xl p-5">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#5a5650]">
-                      <span>{guide.audience}</span>
-                      <span>{guide.readingTime}</span>
-                    </div>
-                    <h3 className="mt-3 text-sm font-semibold leading-6 text-[#f0ece4]">{guide.title}</h3>
-                    <p className="mt-2 text-xs leading-5 text-[#8a8478]">{guide.summary}</p>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {selectedCategory === 'all' && !searchQuery && (
-            <section className="mb-10">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-editorial font-bold text-[#f0ece4]">工具对比</h2>
-                <Link href="/compare" className="text-xs text-[#d4a853] hover:text-[#e8c677]">全部对比</Link>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {comparisons.map((comparison) => (
-                  <Link key={comparison.slug} href={`/compare/${comparison.slug}`} className="glass-card block rounded-2xl p-5">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[#5a5650]">
-                      <span>{comparison.audience}</span>
-                      <span>{comparison.readingTime}</span>
-                    </div>
-                    <h3 className="mt-3 text-sm font-semibold leading-6 text-[#f0ece4]">{comparison.title}</h3>
-                    <p className="mt-2 text-xs leading-5 text-[#8a8478]">{comparison.summary}</p>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          )}
+          {selectedCategory === 'all' && !searchQuery && <HomeContent />}
 
           {/* Section Title */}
           <div className="mb-6 flex items-center justify-between">
@@ -547,54 +454,7 @@ export default function AINavigation() {
 
           {/* Cards Grid */}
           {loading ? renderSkeleton() : filteredWebsites.length > 0 ? (
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredWebsites.map((site, index) => {
-                const parentCat = getParentCategory(site.category)
-                const catId = parentCat?.id || ''
-                const catColorBase = getCatColor(catId)
-                const catText = getCatTextColor(catId)
-                return (
-                  <a key={site.id} href={site.slug ? `/tools/${site.slug}` : site.url} target={site.slug ? undefined : '_blank'} rel={site.slug ? undefined : 'noopener noreferrer'}
-                    className="group glass-card rounded-2xl p-5 sm:p-6 animate-card-enter block"
-                    style={{ animationDelay: `${index * 60}ms` }}
-                    onMouseEnter={() => setHoveredCard(site.id)} onMouseLeave={() => setHoveredCard(null)}>
-                    <div className="relative z-10">
-                      {/* Card Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-400 group-hover:scale-110 group-hover:shadow-lg border"
-                            style={{ background: `${catColorBase}0.08)`, borderColor: `${catColorBase}0.15)` }}>
-                            <span className="text-base">{parentCat?.icon || '◇'}</span>
-                          </div>
-                          <div className="min-w-0">
-                            <h3 className="text-sm sm:text-[15px] font-semibold text-[#f0ece4] group-hover:text-[#e8c677] transition-colors duration-300 truncate">
-                              {site.name}
-                            </h3>
-                            <span className="text-[11px] font-mono" style={{ color: catText, opacity: 0.7 }}>
-                              {getSubcategoryName(site.category)}
-                            </span>
-                          </div>
-                        </div>
-                        <ArrowUpRight className={`h-4 w-4 text-[#5a5650] group-hover:text-[#d4a853] flex-shrink-0 transition-all duration-400 ${hoveredCard === site.id ? 'translate-x-0.5 -translate-y-0.5' : ''}`} />
-                      </div>
-                      {/* Description */}
-                      <p className="text-xs sm:text-sm text-[#8a8478] group-hover:text-[#c8c2b4] transition-colors duration-300 line-clamp-2 leading-relaxed mb-4">
-                        {site.description}
-                      </p>
-                      {/* Footer */}
-                      <div className="pt-3 border-t border-[rgba(212,168,83,0.06)] flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-[#5a5650] truncate max-w-[70%]">
-                          {site.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
-                        </span>
-                        <span className="text-[10px] text-[#d4a853] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center gap-1">
-                          {site.slug ? '查看指南' : '访问'} <ExternalLink className="h-2.5 w-2.5" />
-                        </span>
-                      </div>
-                    </div>
-                  </a>
-                )
-              })}
-            </div>
+            <ToolCardGrid tools={filteredWebsites} />
           ) : (
             <div className="flex flex-col items-center justify-center py-24 animate-fade-in">
               <div className="w-16 h-16 rounded-2xl bg-[#15141c] border border-[rgba(212,168,83,0.08)] flex items-center justify-center mb-5">
